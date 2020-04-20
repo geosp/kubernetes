@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rmqs
+  name: rmqs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rmqs
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mrr.net: "true"
+        io.kompose.service: rmqs
+    spec:
+      containers:
+        - env:
+            - name: RABBITMQ_DEFAULT_PASS
+              value: rabbitmq
+            - name: RABBITMQ_DEFAULT_USER
+              value: rabbitmq
+            - name: RABBITMQ_DEFAULT_VHOST
+              value: /
+            - name: RABBITMQ_ERLANG_COOKIE
+              value: SWQOKODSQALRPCLNMEQG
+          image: rabbitmq:3-management
+          imagePullPolicy: ""
+          name: rmqs
+          ports:
+            - containerPort: 15672
+            - containerPort: 5672
+          resources: {}
+      hostname: rmqs
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

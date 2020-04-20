@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: logstash
+  name: logstash
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      io.kompose.service: logstash
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/elk.net: "true"
+        io.kompose.service: logstash
+    spec:
+      containers:
+        - args:
+            - logstash
+            - -f
+            - /config-dir/custom.conf
+          env:
+            - name: ES_JAVA_OPTS
+              value: -Xms1g -Xmx1g
+          image: docker.elastic.co/logstash/logstash:6.8.3
+          imagePullPolicy: ""
+          name: logstash
+          ports:
+            - containerPort: 5044
+            - containerPort: 8989
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/share/logstash/config/logstash.yml
+              name: logstash-claim0
+              subPath: logstash.yml
+              readOnly: true
+            - mountPath: /config-dir
+              name: logstash-claim1
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+        - name: logstash-claim0
+          persistentVolumeClaim:
+            claimName: logstash-claim0
+            readOnly: true
+        - name: logstash-claim1
+          persistentVolumeClaim:
+            claimName: logstash-claim1
+status: {}
