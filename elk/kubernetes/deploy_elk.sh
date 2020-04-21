@@ -6,7 +6,7 @@ getVolumePath() {
 microk8s kubectl apply -f elk-namespace.json
 microk8s kubectl config set-context --current --namespace=elk
 #create resources
-microk8s kubectl apply -f shared-storageclass.yaml
+microk8s kubectl apply -f ./system/shared-storageclass.yaml
 microk8s kubectl apply -f logstash-persistentvolume.yaml
 microk8s kubectl apply -f logstash-persistentvolumeclaim.yaml
 microk8s kubectl apply -f logstash-deployment.yaml
