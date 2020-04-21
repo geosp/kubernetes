@@ -56,4 +56,6 @@ spec:
       restartPolicy: Always
       serviceAccountName: ""
       volumes: null
+      nodeSelector:
+        kubernetes.io/hostname: ubuntu01
 status: {}
