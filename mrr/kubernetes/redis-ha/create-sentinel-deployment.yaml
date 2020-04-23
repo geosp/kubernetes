@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-ha-cluster-sentinel
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis-ha-cluster-sentinel-lbl
+  template:
+    metadata:
+      name: redis-ha-cluster-sentinel-p1
+      labels:
+        app: redis-ha-cluster-sentinel-lbl
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: redis-ha-cluster-sentinel
+          image: localhost:30150/redis-ha
+          resources: {}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 26379
+          env:
+            - name: SENTINEL
+              value: "true"
+            - name: REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST
+              value: "redis-ha-cluster-master"
+            - name: REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_PORT
+              value: "6379"
+            - name: REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_HOST
+              value: "redis-ha-cluster-sentinel"
+            - name: REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_PORT
+              value: "26379"
+      nodeSelector:
+        kubernetes.io/hostname: pop-os

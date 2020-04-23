@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-ha-cluster-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-ha-cluster-master-lbl
+  template:
+    metadata:
+      name: redis-ha-cluster-master-p1
+      labels:
+        app: redis-ha-cluster-master-lbl
+        master: "true"
+    spec:
+      volumes:
+        - name: redis-data-pv-claim
+          persistentVolumeClaim:
+            claimName: redis-data-pv-claim
+        - name: redis-config-pv-claim
+          persistentVolumeClaim:
+            claimName: redis-config-pv-claim
+      restartPolicy: Always
+      containers:
+        - name: redis-ha-cluster-master
+          image: localhost:30150/redis-ha
+          resources: {}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - mountPath: /redis-data
+              name: redis-data-pv-claim
+              readOnly: false
+            - mountPath: /redis-master
+              name: redis-config-pv-claim
+              readOnly: false
+          env:
+            - name: MASTER
+              value: "true"
+            - name: REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST
+              value: "redis-ha-cluster-master"
+            - name: REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_PORT
+              value: "6379"
+            - name: REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_HOST
+              value: "redis-ha-cluster-sentinel"
+            - name: REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_PORT
+              value: "26379"
+      nodeSelector:
+        kubernetes.io/hostname: pop-os
