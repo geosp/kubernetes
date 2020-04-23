@@ -1,14 +1,4 @@
-#  @Author: https://github.com/sarweshsuman
-#  @Description:
-#    Entrypoint script for deploying redis HA via Sentinel in a kubernetes cluster
-#    This script expects following environment variables to be set,
-#    1. SENTINEL: true if this is sentinel instance, else false.
-#    2. MASTER: true if this is master instance, this is helpful when starting the cluster for the first time.
-#    3. REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_HOST: this is service name of sentinel, check the yaml.
-#    4. REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_PORT: this is service port of sentinel.
-#    5. REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST: this is master's service name, this is needed when sentinel starts for the first time.
-#    6. REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_PORT: this is master's port, is needed when sentinel starts for the first time.
-
+#  Based on: https://github.com/sarweshsuman
 echo "REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_HOST: ${REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_HOST}"
 echo "REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_PORT: ${REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_PORT}"
 echo "REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST: ${REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST}"
