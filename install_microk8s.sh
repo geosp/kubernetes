@@ -7,3 +7,7 @@ microk8s kubectl get services --namespace=kube-system
 microk8s kubectl get services --namespace=container-registry
 token=$(microk8s kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
 microk8s kubectl -n kube-system describe secret $token
+
+# To change the cluster domain update the config map in the dashboard und the kube-system namespace 
+# for CoreDNS to the new name and then update the /var/snap/microk8s/current/args/kubelet 
+# and set --cluster-domain equal to your new domain name.
