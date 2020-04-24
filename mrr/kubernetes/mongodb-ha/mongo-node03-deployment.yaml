@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: mongo-node03
+  name: mongo-node03
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongo-node03
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mrr.net: "true"
+        io.kompose.service: mongo-node03
+    spec:
+      containers:
+        - command:
+            - /usr/bin/mongod
+            - "-f"
+            - /etc/mongod.conf
+            - "--dbpath"
+            - /data/db
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          name: mongo-node03
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /etc/mongod.conf
+              name: mongo-config-pv-claim
+              subPath: mongod.conf
+              readOnly: false
+            - mountPath: /data/db
+              name: mongo-node03-data-pv-claim
+              readOnly: false
+          resources: {}
+      hostname: mongo-node03
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+        - name: mongo-config-pv-claim
+          persistentVolumeClaim:
+            claimName: mongo-config-pv-claim
+        - name: mongo-node03-data-pv-claim
+          persistentVolumeClaim:
+            claimName: mongo-node03-data-pv-claim
+status: {}
