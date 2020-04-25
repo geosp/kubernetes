@@ -7,11 +7,10 @@ echo "REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_PORT: ${REDIS_HA_CLU
 function launchmaster() {
   echo "Starting Redis instance as Master.."
 
-  echo "while true; do   sleep 2;   export master=\$(hostname -i);   echo \"Master IP is Me : \${master}\";   echo \"Setting STARTUP_MASTER_IP in redis\";   redis-cli -a ${REDIS_DEFAULT_PASSWORD} -h \${master} set STARTUP_MASTER_IP \${master};   if [ \$? == \"0\" ]; then     echo \"Successfully set STARTUP_MASTER_IP\";     break;   fi;   echo \"Connecting to master \${master} failed.  Waiting...\";   sleep 5; done" > insert_master_ip.sh
+  echo "while true; do   sleep 2;   export master=\$(hostname -i);   echo \"Master IP is Me : \${master}\";   echo \"Setting STARTUP_MASTER_IP in redis\";   redis-cli -h \${master} set STARTUP_MASTER_IP \${master};   if [ \$? == \"0\" ]; then     echo \"Successfully set STARTUP_MASTER_IP\";     break;   fi;   echo \"Connecting to master \${master} failed.  Waiting...\";   sleep 5; done" > insert_master_ip.sh
 
   bash insert_master_ip.sh &
 
-  sed -i "s/REDIS_DEFAULT_PASSWORD/${REDIS_DEFAULT_PASSWORD}/" /redis-master/redis-master.conf
   redis-server /redis-master/redis-master.conf --protected-mode no
 
 }
@@ -30,7 +29,7 @@ function launchsentinel() {
       master="${master//\"}"
     else
       echo "Unable to connect to Sentinel Service, probably because I am first Sentinel to start. I will try to find STARTUP_MASTER_IP from the redis service"
-      master=$(redis-cli -a ${REDIS_DEFAULT_PASSWORD} -h ${REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST} -p ${REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_PORT} get STARTUP_MASTER_IP)
+      master=$(redis-cli -h ${REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST} -p ${REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_PORT} get STARTUP_MASTER_IP)
       if [[ -n ${master} ]]; then
         echo "Retrieved Redis Master IP as ${master}"
       else
@@ -40,7 +39,7 @@ function launchsentinel() {
       fi
     fi
 
-    redis-cli -a ${REDIS_DEFAULT_PASSWORD} -h ${master} INFO
+    redis-cli -h ${master} INFO
     if [[ "$?" == "0" ]]; then
       break
     fi
@@ -55,7 +54,6 @@ function launchsentinel() {
   echo "sentinel failover-timeout mymaster 60000" >> ${sentinel_conf}
   echo "sentinel parallel-syncs mymaster 1" >> ${sentinel_conf}
   echo "bind 0.0.0.0" >> ${sentinel_conf}
-  echo "sentinel auth-pass mymaster ${REDIS_DEFAULT_PASSWORD}" >> ${sentinel_conf}
 
   redis-sentinel ${sentinel_conf} --protected-mode no
 }
@@ -74,7 +72,7 @@ function launchslave() {
       sleep 60
       continue
     fi
-    redis-cli -a ${REDIS_DEFAULT_PASSWORD} -h ${master} INFO
+    redis-cli -h ${master} INFO
     if [[ "$?" == "0" ]]; then
       break
     fi
@@ -84,7 +82,6 @@ function launchslave() {
 
   sed -i "s/%master-ip%/${master}/" /redis-slave/redis-slave.conf
   sed -i "s/%master-port%/6379/" /redis-slave/redis-slave.conf
-  sed -i "s/REDIS_DEFAULT_PASSWORD/${REDIS_DEFAULT_PASSWORD}/" /redis-slave/redis-slave.conf
   redis-server /redis-slave/redis-slave.conf --protected-mode no
 }
 
@@ -124,10 +121,6 @@ function launchredis() {
     fi
   done
 }
-
-# Using hardcoded password for demo purpose, this needs to be adjusted
-# as per the environment where this is used.
-export REDIS_DEFAULT_PASSWORD="rpasswd"
 
 if [[ "${SENTINEL}" == "true" ]]; then
   launchsentinel
