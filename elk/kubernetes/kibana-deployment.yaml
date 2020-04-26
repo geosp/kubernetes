@@ -31,6 +31,9 @@ spec:
           ports:
             - containerPort: 5601
           resources: {}
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: "http://elasticsearch.elk.svc.mxcluster.local:9200"
       restartPolicy: Always
       serviceAccountName: ""
       volumes: null

@@ -8,4 +8,4 @@ microk8s kubectl delete -f kibana-deployment.yaml
 microk8s kubectl delete service kibana
 microk8s kubectl delete -f elasticsearch-deployment.yaml
 microk8s kubectl delete service elasticsearch
-microk8s kubectl delete -f elk-namespace.json
+#microk8s kubectl delete -f elk-namespace.json

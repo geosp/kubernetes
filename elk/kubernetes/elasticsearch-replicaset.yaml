@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: ReplicaSet
 metadata:
   annotations:
     kompose.cmd: kompose convert
@@ -9,21 +9,28 @@ metadata:
     io.kompose.service: elasticsearch
   name: elasticsearch
 spec:
-  replicas: 0
   selector:
     matchLabels:
       io.kompose.service: elasticsearch
-  strategy: {}
+  replicas: 0
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
       labels:
-        io.kompose.network/elk.net: "true"
         io.kompose.service: elasticsearch
     spec:
+      initContainers:
+        - name: init-sysctl
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          command: ["sh", "-c", "ulimit -n 65536"]
+        - name: init-memlock
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          command: ["sh", "-c", "ulimit -l unlimited"]
       containers:
         - env:
             - name: ES_JAVA_OPTS
@@ -38,6 +45,12 @@ spec:
               value: "false"
             - name: xpack.security.enabled
               value: "false"
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - IPC_LOCK
+                - SYS_RESOURCE
           image: docker.elastic.co/elasticsearch/elasticsearch:6.8.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -55,7 +68,5 @@ spec:
           resources: {}
       restartPolicy: Always
       serviceAccountName: ""
-      volumes: null
       nodeSelector:
         kubernetes.io/hostname: ubuntu01
-status: {}
