@@ -33,4 +33,4 @@ spec:
             - name: REDIS_HA_CLUSTER_SENTINEL_SERVICE_SERVICE_PORT
               value: "26379"
       nodeSelector:
-        kubernetes.io/hostname: pop-os
+        kubernetes.io/hostname: ubuntu02

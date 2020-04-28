@@ -36,7 +36,6 @@ spec:
               value: "http://elasticsearch.elk.svc.mxcluster.local:9200"
       restartPolicy: Always
       serviceAccountName: ""
-      volumes: null
       nodeSelector:
-        kubernetes.io/hostname: ubuntu01
+        kubernetes.io/hostname: ubuntu04
 status: {}

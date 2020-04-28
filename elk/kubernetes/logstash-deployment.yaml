@@ -53,4 +53,6 @@ spec:
         - name: logstash-pv-claim
           persistentVolumeClaim:
             claimName: logstash-pv-claim
+      nodeSelector:
+        kubernetes.io/hostname: ubuntu04
 status: {}

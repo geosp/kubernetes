@@ -42,6 +42,8 @@ spec:
       hostname: mongo-node02
       restartPolicy: Always
       serviceAccountName: ""
+      nodeSelector:
+        kubernetes.io/hostname: ubuntu02
       volumes:
         - name: mongo-config-pv-claim
           persistentVolumeClaim:

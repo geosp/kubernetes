@@ -16,7 +16,7 @@ microk8s kubectl apply -f logstash-deployment.yaml
 microk8s kubectl expose deployment logstash --type=LoadBalancer --name=logstash
 #microk8s kubectl apply -f logstash-claim0-persistentvolumeclaim.yaml
 #microk8s kubectl apply -f logstash-claim1-persistentvolumeclaim.yaml
-# microk8s kubectl apply -f elasticsearch-deployment.yaml
+#microk8s kubectl apply -f elasticsearch-deployment.yaml
 microk8s kubectl apply -f elasticsearch-replicaset.yaml
 microk8s kubectl apply -f kibana-deployment.yaml
 microk8s kubectl expose deployment kibana --type=LoadBalancer --name=kibana
