@@ -29,20 +29,20 @@ spec:
             - redis-server
             - --appendonly
             - "yes"
-          image: redis
-          imagePullPolicy: ""
+          image: redis:5.0.5-buster
+          imagePullPolicy: IfNotPresent
           name: redis
           ports:
             - containerPort: 6379
           resources: {}
           volumeMounts:
             - mountPath: /data
-              name: redis-claim0
+              name: redis-data-pv-claim
       hostname: redis
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-        - name: redis-claim0
+        - name: redis-data-pv-claim
           persistentVolumeClaim:
-            claimName: redis-claim0
+            claimName: redis-data-pv-claim
 status: {}

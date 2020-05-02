@@ -25,7 +25,7 @@ spec:
             - /usr/bin/mongod
             - "-f"
             - /etc/mongod.conf
-          image: mongo
+          image: mongo:4.2.6
           imagePullPolicy: IfNotPresent
           name: mongo-node02
           ports:

@@ -15,22 +15,13 @@ echo 'Deploying redis-ha to kubernetes...'
 microk8s kubectl apply -f ../mrr-namespace.json
 microk8s kubectl config set-context --current --namespace=mrr
 microk8s kubectl apply -f ../mrr-networkpolicy.yaml
-microk8s kubectl apply -f redis-config-persistentvolume.yaml
-microk8s kubectl apply -f redis-config-persistentvolumeclaim.yaml
-microk8s kubectl apply -f redis-data-persistentvolume.yaml
-microk8s kubectl apply -f redis-data-persistentvolumeclaim.yaml
+microk8s kubectl apply -f redis-ha-config-persistentvolume.yaml
+microk8s kubectl apply -f redis-ha-config-persistentvolumeclaim.yaml
+microk8s kubectl apply -f redis-ha-data-persistentvolume.yaml
+microk8s kubectl apply -f redis-ha-data-persistentvolumeclaim.yaml
 microk8s kubectl apply -f create-master-deployment.yaml
 microk8s kubectl expose deployment redis-ha-cluster-master --type=LoadBalancer --name=redis-ha-cluster-master
 microk8s kubectl apply -f create-sentinel-deployment.yaml
 microk8s kubectl expose deployment redis-ha-cluster-sentinel --type=LoadBalancer --name=redis-ha-cluster-sentinel
 microk8s kubectl apply -f create-slave-deployment.yaml
-
-# delete
-# microk8s kubectl delete -f create-master-deployment.yaml
-# microk8s kubectl delete -f create-sentinel-deployment.yaml
-# microk8s kubectl delete service redis-ha-cluster-master
-# microk8s kubectl delete service redis-ha-cluster-sentinel
-# microk8s kubectl delete -f create-slave-deployment.yaml
-# rm /storage/data/mrr/redis-ha/config/*.conf
-# sudo rm -rf /storage/data/mrr/redis-ha/data
-# mkdir /storage/data/mrr/redis-ha/data
+microk8s kubectl expose deployment redis-ha-cluster-slave --type=LoadBalancer --name=redis-ha-cluster-slave

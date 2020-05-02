@@ -6,6 +6,7 @@ microk8s kubectl delete -f create-sentinel-deployment.yaml
 microk8s kubectl delete -f create-slave-deployment.yaml
 microk8s kubectl delete service redis-ha-cluster-master
 microk8s kubectl delete service redis-ha-cluster-sentinel
+microk8s kubectl delete service redis-ha-cluster-slave
 # rm /storage/data/mrr/redis-ha/config/*.conf
 # sudo rm -rf /storage/data/mrr/redis-ha/data
 # mkdir /storage/data/mrr/redis-ha/data

@@ -6,13 +6,13 @@ metadata:
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: null
   labels:
-    io.kompose.service: rmqs
-  name: rmqs
+    io.kompose.service: rabbitmq
+  name: rabbitmq
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: rmqs
+      io.kompose.service: rabbitmq
   strategy: {}
   template:
     metadata:
@@ -22,7 +22,7 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.network/mrr.net: "true"
-        io.kompose.service: rmqs
+        io.kompose.service: rabbitmq
     spec:
       containers:
         - env:
@@ -35,14 +35,22 @@ spec:
             - name: RABBITMQ_ERLANG_COOKIE
               value: SWQOKODSQALRPCLNMEQG
           image: rabbitmq:3-management
-          imagePullPolicy: ""
-          name: rmqs
+          imagePullPolicy: IfNotPresent
+          name: rabbitmq
           ports:
             - containerPort: 15672
             - containerPort: 5672
           resources: {}
-      hostname: rmqs
+          volumeMounts:
+            - mountPath: /var/lib/rabbitmq/mnesia/rabbit@rabbitmq
+              name: rabbitmq-data-pv-claim
+      hostname: rabbitmq
       restartPolicy: Always
       serviceAccountName: ""
-      volumes: null
+      volumes:
+        - name: rabbitmq-data-pv-claim
+          persistentVolumeClaim:
+            claimName: rabbitmq-data-pv-claim
+      nodeSelector:
+        kubernetes.io/hostname: pop-os02
 status: {}

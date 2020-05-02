@@ -27,7 +27,7 @@ spec:
             - /etc/mongod.conf
             - "--dbpath"
             - /data/db
-          image: mongo
+          image: mongo:4.2.6
           imagePullPolicy: IfNotPresent
           name: mongo-node03
           ports:

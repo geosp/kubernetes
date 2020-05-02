@@ -28,14 +28,21 @@ spec:
         - command:
             - /usr/bin/mongod
             - --bind_ip_all
-          image: mongo
-          imagePullPolicy: ""
+          image: mongo:4.2.6
+          imagePullPolicy: IfNotPresent
           name: mongo
           ports:
             - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-data-pv-claim
+              readOnly: false
           resources: {}
       hostname: mongo
       restartPolicy: Always
       serviceAccountName: ""
-      volumes: null
+      volumes:
+        - name: mongo-data-pv-claim
+          persistentVolumeClaim:
+            claimName: mongo-data-pv-claim
 status: {}

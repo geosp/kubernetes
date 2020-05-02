@@ -15,12 +15,12 @@ spec:
         slave: "true"
     spec:
       volumes:
-        - name: redis-data-pv-claim
+        - name: redis-ha-data-pv-claim
           persistentVolumeClaim:
-            claimName: redis-data-pv-claim
-        - name: redis-config-pv-claim
+            claimName: redis-ha-data-pv-claim
+        - name: redis-ha-config-pv-claim
           persistentVolumeClaim:
-            claimName: redis-config-pv-claim
+            claimName: redis-ha-config-pv-claim
       restartPolicy: Always
       containers:
         - name: redis-ha-cluster-slave
@@ -31,10 +31,10 @@ spec:
             - containerPort: 6379
           volumeMounts:
             - mountPath: /redis-data
-              name: redis-data-pv-claim
+              name: redis-ha-data-pv-claim
               readOnly: false
             - mountPath: /redis-slave
-              name: redis-config-pv-claim
+              name: redis-ha-config-pv-claim
               readOnly: false
           env:
             - name: REDIS_HA_CLUSTER_STARTUP_REDIS_MASTER_SERVICE_SERVICE_HOST

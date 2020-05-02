@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: redis-config-pv-claim
+  name: mongo-data-pv-claim
 spec:
   storageClassName: shared-storage
   accessModes:

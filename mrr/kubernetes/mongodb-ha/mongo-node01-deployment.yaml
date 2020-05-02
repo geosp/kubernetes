@@ -28,7 +28,7 @@ spec:
             # - tail
             # - 'f'
             # - /dev/null
-          image: mongo
+          image: mongo:4.2.6
           imagePullPolicy: IfNotPresent
           name: mongo-node01
           ports:
