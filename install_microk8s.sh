@@ -6,6 +6,8 @@ sudo snap alias microk8s.kubectl kubectl
 microk8s status --wait-ready
 microk8s enable dashboard dns ingress istio metallb metrics-server registry storage
 microk8s status --wait-ready
+# Create a shared storage class for shared volume NFS storage.
+kubectl apply -f shared-storageclass.yaml
 # The service kubernetes-dashboard-external will have be the IP address to connect to the dashboard.
 kubectl expose deployment kubernetes-dashboard --type=LoadBalancer --name=kubernetes-dashboard-external --namespace=kube-system
 # The service registry-external will have be the IP address to connect to the pricvate docker registry.
