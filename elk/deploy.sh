@@ -24,6 +24,6 @@ microk8s kubectl expose replicaset elasticsearch --type=LoadBalancer --name=elas
 logstashSettingsPath=$(getVolumePath 'logstash-pv-claim')
 logstashConfigurationPath=$(getVolumePath 'logstash-pv-claim')
 echo "Copying configuration to path: ${logstashConfigurationPath}"
-cp -r ../logstash/custom.conf $logstashConfigurationPath
+cp -r ./logstash/custom.conf $logstashConfigurationPath
 echo "Copying settings to path: ${logstashSettingsPath}"
-cp -r ../logstash/logstash.yml $logstashSettingsPath
+cp -r ./logstash/logstash.yml $logstashSettingsPath
