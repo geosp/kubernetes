@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb-lbl
+  template:
+    metadata:
+      name: mariadb-p1
+      labels:
+        app: mariadb-lbl
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: mariadb
+          image: mariadb:10.5.2-bionic
+          resources: {}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets-m46c57bggb
+                  key: password
+            - name: MYSQL_DATABASE
+              value: "asterisk_system"
+            - name: MYSQL_USER
+              value: "asterisk"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets-m46c57bggb
+                  key: asterisk_password
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mariadb-data-pv-claim
+      volumes:
+        - name: mariadb-data-pv-claim
+          persistentVolumeClaim:
+            claimName: mariadb-data-pv-claim
+      nodeSelector:
+        kubernetes.io/hostname: pop-os02
