@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-lbl
+  template:
+    metadata:
+      name: mssql-p1
+      labels:
+        app: mssql-lbl
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-16.04
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          resources: {}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1433
+          env:
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secrets-92t62d2dk6
+                  key: password
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_PID
+              value: "Express"
+          volumeMounts:
+            - mountPath: /var/opt/mssql
+              name: mssql-data-pv-claim
+      volumes:
+        - name: mssql-data-pv-claim
+          persistentVolumeClaim:
+            claimName: mssql-data-pv-claim
+      nodeSelector:
+        kubernetes.io/hostname: pop-os02
