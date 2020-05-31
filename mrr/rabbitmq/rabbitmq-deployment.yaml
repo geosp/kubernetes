@@ -52,5 +52,5 @@ spec:
           persistentVolumeClaim:
             claimName: rabbitmq-data-pv-claim
       nodeSelector:
-        kubernetes.io/hostname: pop-os02
+        kubernetes.io/hostname: pop-os
 status: {}

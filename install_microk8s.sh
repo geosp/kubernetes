@@ -32,3 +32,18 @@ kubectl -n kube-system describe secret $token
 # as your DMZ server, deploy services to that node, and create ingress configurations for those external services. Make
 # sure to enable the firewall setting on the DMZ server and only allow traffic to the ports required by your services.
 # Ingress enables you to route requests using NGINX as the remote proxy using domain names.
+# SSL Certificate for Dashboard
+# kubectl -n kube-system delete secret kubernetes-dashboard-certs
+# kubectl -n kube-system create secret generic kubernetes-dashboard-certs --from-file=dashboard.crt --from-file=device.key
+# kubectl -n kube-system edit deploy kubernetes-dashboard -o yaml
+
+# # add:
+# - args:
+#   - --tls-cert-file=/dashboard.crt
+#   - --tls-key-file=/device.key
+# kubectl expose deployment kubernetes-dashboard --type=LoadBalancer --name=kubernetes-dashboard --namespace=kube-system
+
+# Change cluster name:
+# in /var/snap/microk8s/actions/istio
+# grep -rnw './' -e 'cluster.local
+#'%s/search_string/replacement_string/g 

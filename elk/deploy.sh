@@ -6,7 +6,7 @@ getVolumePath() {
     echo $(microk8s kubectl describe pv $(microk8s kubectl get pv | grep $1 | head -n1 | awk '{print $1;}') | grep Path: | head -n2 | awk '{print $2;}')
 }
 #set current name space to development
-#microk8s kubectl apply -f elk-namespace.json
+microk8s kubectl apply -f elk-namespace.json
 microk8s kubectl config set-context --current --namespace=elk
 #create resources
 microk8s kubectl apply -f ./system/shared-storageclass.yaml
