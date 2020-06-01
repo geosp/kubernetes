@@ -9,14 +9,14 @@ getVolumePath() {
 microk8s kubectl apply -f elk-namespace.json
 microk8s kubectl config set-context --current --namespace=elk
 #create resources
-microk8s kubectl apply -f ./system/shared-storageclass.yaml
+microk8s kubectl apply -f ../shared-storageclass.yaml
 microk8s kubectl apply -f logstash-persistentvolume.yaml
 microk8s kubectl apply -f logstash-persistentvolumeclaim.yaml
 microk8s kubectl apply -f logstash-deployment.yaml
 microk8s kubectl expose deployment logstash --type=LoadBalancer --name=logstash
-#microk8s kubectl apply -f logstash-claim0-persistentvolumeclaim.yaml
-#microk8s kubectl apply -f logstash-claim1-persistentvolumeclaim.yaml
-#microk8s kubectl apply -f elasticsearch-deployment.yaml
+microk8s kubectl apply -f logstash-claim0-persistentvolumeclaim.yaml
+microk8s kubectl apply -f logstash-claim1-persistentvolumeclaim.yaml
+microk8s kubectl apply -f elasticsearch-deployment.yaml
 microk8s kubectl apply -f elasticsearch-replicaset.yaml
 microk8s kubectl apply -f kibana-deployment.yaml
 microk8s kubectl expose deployment kibana --type=LoadBalancer --name=kibana

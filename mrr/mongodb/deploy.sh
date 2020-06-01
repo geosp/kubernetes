@@ -1,4 +1,4 @@
-echo 'Deploying rabbitmq...'
+echo 'Deploying mongodb...'
 microk8s kubectl apply -f ../mrr-namespace.json
 microk8s kubectl config set-context --current --namespace=mrr
 microk8s kubectl apply -f ../mrr-networkpolicy.yaml
