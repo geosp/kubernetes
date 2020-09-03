@@ -20,7 +20,7 @@ kubectl -n kube-system describe secret $token
 
 # To change the cluster domain update the config map in the dashboard under the kube-system namespace 
 # for CoreDNS to the new name and then update the /var/snap/microk8s/current/args/kubelet 
-# and set --cluster-domain equal to your new domain name. To route requests form your LAN to the cluster internal
+# and set --cluster-domain equal to your new domain name on every node in the cluster. To route requests form your LAN to the cluster internal
 # network get default gateway IP using th folloeing command:
 #
 # kubectl get svc istio-ingressgateway -n istio-system
