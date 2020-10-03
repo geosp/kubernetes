@@ -33,7 +33,7 @@ spec:
           env:
             - name: ES_JAVA_OPTS
               value: -Xms1g -Xmx1g
-          image: docker.elastic.co/logstash/logstash:6.8.3
+          image: docker.elastic.co/logstash/logstash:7.9.2
           imagePullPolicy: ""
           name: logstash
           ports:

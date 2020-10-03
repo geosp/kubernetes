@@ -38,7 +38,7 @@ spec:
               value: "false"
             - name: xpack.security.enabled
               value: "false"
-          image: docker.elastic.co/elasticsearch/elasticsearch:6.8.3
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:

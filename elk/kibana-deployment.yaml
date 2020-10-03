@@ -25,7 +25,7 @@ spec:
         io.kompose.service: kibana
     spec:
       containers:
-        - image: docker.elastic.co/kibana/kibana:6.8.3
+        - image: docker.elastic.co/kibana/kibana:7.9.2
           imagePullPolicy: "Always"
           name: kibana
           ports:

@@ -1,2 +1,2 @@
 xpack.monitoring.enabled: true
-xpack.monitoring.elasticsearch.url: "http://elasticsearch.elk.svc.mxcluster.local:9200"
+xpack.monitoring.elasticsearch.hosts: "http://elasticsearch.elk.svc.mxcluster.local:9200"
