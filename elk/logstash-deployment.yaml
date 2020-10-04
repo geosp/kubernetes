@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: logstash
   name: logstash
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       io.kompose.service: logstash
@@ -20,11 +20,17 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
       labels:
         io.kompose.network/elk.net: "true"
         io.kompose.service: logstash
     spec:
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: curlimages/curl
+          command:
+            - curl
+            - -f
+            - http://elasticsearch:9200
       containers:
         - args:
             - logstash

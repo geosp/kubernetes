@@ -12,18 +12,19 @@ microk8s kubectl config set-context --current --namespace=elk
 microk8s kubectl apply -f ../shared-storageclass.yaml
 microk8s kubectl apply -f logstash-persistentvolume.yaml
 microk8s kubectl apply -f logstash-persistentvolumeclaim.yaml
-microk8s kubectl apply -f logstash-deployment.yaml
-microk8s kubectl expose deployment logstash --type=LoadBalancer --name=logstash
-microk8s kubectl apply -f logstash-claim0-persistentvolumeclaim.yaml
-microk8s kubectl apply -f logstash-claim1-persistentvolumeclaim.yaml
+microk8s kubectl apply -f elasticsearch-data-persistentvolume.yaml
+microk8s kubectl apply -f elasticsearch-data-persistentvolumeclaim.yaml
+microk8s kubectl apply -f elasticsearch-hunspell-persistentvolume.yaml
+microk8s kubectl apply -f elasticsearch-hunspell-persistentvolumeclaim.yaml
+microk8s kubectl create configmap elasticsearch-config --from-file=elasticsearch/elasticsearch.yml
 microk8s kubectl apply -f elasticsearch-deployment.yaml
-microk8s kubectl apply -f elasticsearch-replicaset.yaml
+microk8s kubectl apply -f logstash-deployment.yaml
 microk8s kubectl apply -f kibana-deployment.yaml
+microk8s kubectl expose deployment logstash --type=LoadBalancer --name=logstash
 microk8s kubectl expose deployment kibana --type=LoadBalancer --name=kibana
-microk8s kubectl expose replicaset elasticsearch --type=LoadBalancer --name=elasticsearch
+microk8s kubectl expose deployment elasticsearch --type=LoadBalancer --name=elasticsearch
 logstashSettingsPath=$(getVolumePath 'logstash-pv-claim')
-logstashConfigurationPath=$(getVolumePath 'logstash-pv-claim')
-echo "Copying configuration to path: ${logstashConfigurationPath}"
-cp -r ./logstash/custom.conf $logstashConfigurationPath
+echo "Copying configuration to path: ${logstashSettingsPath}"
+cp -r ./logstash/custom.conf $logstashSettingsPath
 echo "Copying settings to path: ${logstashSettingsPath}"
 cp -r ./logstash/logstash.yml $logstashSettingsPath

@@ -4,12 +4,11 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
   labels:
     io.kompose.service: elasticsearch
   name: elasticsearch
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       io.kompose.service: elasticsearch
@@ -19,7 +18,6 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
       labels:
         io.kompose.network/elk.net: "true"
         io.kompose.service: elasticsearch
@@ -30,8 +28,6 @@ spec:
               value: -Xms1000m -Xmx1000m
             - name: bootstrap.memory_lock
               value: "true"
-            - name: cluster.name
-              value: docker-cluster
             - name: discovery.type
               value: single-node
             - name: xpack.monitoring.enabled
@@ -53,9 +49,27 @@ spec:
           ports:
             - containerPort: 9200
           resources: {}
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: elasticsearch-data-pv-claim
+            - mountPath: /usr/share/elasticsearch/config/hunspell
+              name: elasticsearch-hunspell-pv-claim
+            - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              name: elasticsearch-config
+              subPath: elasticsearch.yml
+              readOnly: true
+      volumes:
+        - name: elasticsearch-data-pv-claim
+          persistentVolumeClaim:
+            claimName: elasticsearch-data-pv-claim
+        - name: elasticsearch-hunspell-pv-claim
+          persistentVolumeClaim:
+            claimName: elasticsearch-hunspell-pv-claim
+        - name: elasticsearch-config
+          configMap:
+            name: elasticsearch-config
       restartPolicy: Always
       serviceAccountName: ""
-      volumes: null
       nodeSelector:
         kubernetes.io/hostname: ubuntu01
 status: {}

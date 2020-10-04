@@ -4,12 +4,11 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
   labels:
     io.kompose.service: kibana
   name: kibana
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       io.kompose.service: kibana
@@ -24,6 +23,13 @@ spec:
         io.kompose.network/elk.net: "true"
         io.kompose.service: kibana
     spec:
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: curlimages/curl
+          command:
+            - curl
+            - -f
+            - http://elasticsearch:9200
       containers:
         - image: docker.elastic.co/kibana/kibana:7.9.2
           imagePullPolicy: "Always"
